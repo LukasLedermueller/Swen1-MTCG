@@ -1,6 +1,6 @@
 package at.fhtw.sampleapp.service.weather;
 
-import at.fhtw.sampleapp.controller.Controller;
+import at.fhtw.sampleapp.controller.oldController;
 import at.fhtw.sampleapp.model.Weather;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import at.fhtw.httpserver.http.ContentType;
@@ -10,7 +10,7 @@ import at.fhtw.httpserver.server.Response;
 
 import java.util.List;
 
-public class WeatherController extends Controller {
+public class WeatherController extends oldController {
     private WeatherDAL weatherDAL;
 
     public WeatherController(WeatherDAL weatherDAL) {
