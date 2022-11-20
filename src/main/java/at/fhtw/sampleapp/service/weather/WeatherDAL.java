@@ -1,8 +1,5 @@
 package at.fhtw.sampleapp.service.weather;
 
-import at.fhtw.httpserver.server.Request;
-import at.fhtw.httpserver.server.Response;
-import at.fhtw.httpserver.server.Service;
 import at.fhtw.sampleapp.model.Weather;
 
 import java.util.ArrayList;
