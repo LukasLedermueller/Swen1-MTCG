@@ -2,6 +2,7 @@ package at.fhtw;
 
 import at.fhtw.httpserver.utils.Router;
 import at.fhtw.httpserver.server.Server;
+import at.fhtw.mtcg.service.users.users.UserService;
 import at.fhtw.sampleapp.service.echo.EchoService;
 import at.fhtw.sampleapp.service.weather.WeatherService;
 
@@ -22,6 +23,7 @@ public class Main {
         Router router = new Router();
         router.addService("/weather", new WeatherService());
         router.addService("/echo", new EchoService());
+        router.addService("/users", new UserService());
 
         return router;
     }
