@@ -40,6 +40,12 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.5.1</version>
+        </dependency>
     </dependencies>
 
     <properties>
