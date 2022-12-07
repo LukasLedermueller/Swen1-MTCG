@@ -1,5 +1,6 @@
 package at.fhtw.sampleapp.service.weather;
 
+import at.fhtw.sampleapp.model.Weather;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
