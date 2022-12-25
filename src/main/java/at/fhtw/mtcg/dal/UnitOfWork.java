@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class UnitOfWork {
+public class UnitOfWork implements AutoCloseable {
 
     private Connection connection;
     public UnitOfWork() {
@@ -59,5 +59,11 @@ public class UnitOfWork {
             }
         }
         throw new DataAccessException("UnitOfWork doesn't have active connection available");
+    }
+
+    @Override
+    public void close() {
+        System.out.println("CLOSE");
+        this.finishWork();
     }
 }
