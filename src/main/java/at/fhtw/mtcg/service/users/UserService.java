@@ -20,13 +20,13 @@ public class UserService implements Service {
         if (request.getMethod() == Method.POST && request.getPathParts().size() == 1) {
             return this.userController.addUser(request);
         } else if (request.getMethod() == Method.GET && request.getPathParts().size() == 2) {
-            return this.userController.getUser(request.getPathParts().get(1));
+            return this.userController.getUser(request);
         } else if (request.getMethod() == Method.PUT && request.getPathParts().size() == 2) {
             return this.userController.updateUser(request);
         } else {
             return new Response(
                     HttpStatus.BAD_REQUEST,
-                    ContentType.JSON,
+                    ContentType.PLAIN_TEXT,
                     ""
             );
         }

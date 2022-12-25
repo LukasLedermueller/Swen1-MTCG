@@ -34,8 +34,6 @@ public class UserRepository {
                 throw new UserAlreadyExistsException("User already exists");
             }
             throw new SQLException(e.getMessage());
-        } catch (DataAccessException e) {
-            throw new DataAccessException(e.getMessage());
         }
     }
 
