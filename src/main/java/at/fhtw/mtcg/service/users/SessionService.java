@@ -3,11 +3,15 @@ package at.fhtw.mtcg.service.users;
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
 import at.fhtw.httpserver.http.Method;
-import at.fhtw.httpserver.server.HeaderMap;
 import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.server.Service;
 import at.fhtw.mtcg.controller.users.SessionController;
+import at.fhtw.mtcg.model.Card;
+import at.fhtw.mtcg.model.CardName;
+
+
+import java.util.UUID;
 
 public class SessionService implements Service {
 

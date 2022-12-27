@@ -2,6 +2,8 @@ package at.fhtw;
 
 import at.fhtw.httpserver.utils.Router;
 import at.fhtw.httpserver.server.Server;
+import at.fhtw.mtcg.service.cards.CardService;
+import at.fhtw.mtcg.service.cards.DeckService;
 import at.fhtw.mtcg.service.users.SessionService;
 import at.fhtw.mtcg.service.users.UserService;
 import at.fhtw.sampleapp.service.echo.EchoService;
@@ -26,6 +28,8 @@ public class Main {
         router.addService("/echo", new EchoService());
         router.addService("/users", new UserService());
         router.addService("/sessions", new SessionService());
+        router.addService("/cards", new CardService());
+        router.addService("/decks", new DeckService());
 
         return router;
     }
