@@ -6,6 +6,7 @@ import at.fhtw.mtcg.exception.UserAlreadyExistsException;
 import at.fhtw.mtcg.exception.UserNotFoundException;
 import at.fhtw.mtcg.model.UserCredentials;
 import at.fhtw.mtcg.model.UserData;
+import at.fhtw.mtcg.model.UserStats;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -105,6 +106,28 @@ public class UserRepository {
                 throw new NoMoneyException("User has not enough money");
             }
             throw new SQLException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public UserStats getUserStats(String username) throws Exception {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        SELECT * FROM users
+                        WHERE username = ?;
+                    """))
+        {
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                return new UserStats(resultSet.getString("Name"), resultSet.getInt("Elo"),
+                        resultSet.getInt("wins"), resultSet.getInt("losses"));
+            } else {
+                throw new UserNotFoundException("User not found");
+            }
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException(e.getMessage());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
