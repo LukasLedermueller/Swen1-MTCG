@@ -2,8 +2,8 @@ package at.fhtw.mtcg.dal.repository.cards;
 
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
-import at.fhtw.mtcg.exception.InvalidTokenException;
 import at.fhtw.mtcg.exception.NoCardsException;
+import at.fhtw.mtcg.exception.NotAvailableException;
 import at.fhtw.mtcg.model.Card;
 import at.fhtw.mtcg.model.CardName;
 
@@ -28,9 +28,6 @@ public class CardRepository {
                     """)) {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
-            String id;
-            String name;
-            float damage;
             while (resultSet.next()) {
                 cards.add(new Card(resultSet.getString("id"), CardName.valueOf(resultSet.getString("name")), resultSet.getFloat("damage")));
             }
@@ -43,5 +40,50 @@ public class CardRepository {
             throw new DataAccessException(e.getMessage());
         }
         //CardName cardName = CardName.valueOf("Ork");
+    }
+    public Card getCardById(String id) throws Exception {
+        List<Card> cards = new ArrayList<>();
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        SELECT * from cards
+                        WHERE id = ?;
+                    """)) {
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                throw new NoCardsException("Card doesn't exist");
+            }
+            Card card = new Card(resultSet.getString("id"), CardName.valueOf(resultSet.getString("name")), resultSet.getFloat("damage"));
+            return card;
+        } catch (NoCardsException e) {
+            throw new NoCardsException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public void checkCardOwnership(String username, String id) throws Exception {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        SELECT * from cards
+                        WHERE owner = ? AND id = ?;
+                    """)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                throw new NotAvailableException("Card is not owned by user");
+            }
+        } catch (NotAvailableException e) {
+            throw new NotAvailableException(e.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
 }

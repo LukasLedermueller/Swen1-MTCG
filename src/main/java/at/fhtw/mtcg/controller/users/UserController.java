@@ -7,8 +7,10 @@ import at.fhtw.httpserver.server.Response;
 import at.fhtw.mtcg.controller.Controller;
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
+import at.fhtw.mtcg.dal.repository.cards.DeckRepository;
 import at.fhtw.mtcg.dal.repository.users.SessionRepository;
 import at.fhtw.mtcg.dal.repository.users.UserRepository;
+import at.fhtw.mtcg.exception.EmptyRequestBodyException;
 import at.fhtw.mtcg.exception.InvalidTokenException;
 import at.fhtw.mtcg.exception.UserAlreadyExistsException;
 import at.fhtw.mtcg.exception.UserNotFoundException;
@@ -35,10 +37,11 @@ public class UserController extends Controller {
         }
         try (unitOfWork){
             if (request.getBody() == null) {
-                throw new NullPointerException("Request-body is null");
+                throw new EmptyRequestBodyException("Request-body is null");
             }
             UserCredentials userCredentials = this.getObjectMapper().readValue(request.getBody(), UserCredentials.class);
             new UserRepository(unitOfWork).addUser(userCredentials);
+            new DeckRepository(unitOfWork).createDeck(userCredentials.getUsername());
             unitOfWork.commitTransaction();
 
             System.out.println("new user: " + userCredentials.getUsername());
