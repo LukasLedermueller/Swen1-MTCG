@@ -4,6 +4,7 @@ import at.fhtw.httpserver.utils.Router;
 import at.fhtw.httpserver.server.Server;
 import at.fhtw.mtcg.service.cards.CardService;
 import at.fhtw.mtcg.service.cards.DeckService;
+import at.fhtw.mtcg.service.game.StatsService;
 import at.fhtw.mtcg.service.packages.PackageService;
 import at.fhtw.mtcg.service.packages.TransactionService;
 import at.fhtw.mtcg.service.users.SessionService;
@@ -34,6 +35,7 @@ public class Main {
         router.addService("/deck", new DeckService());
         router.addService("/packages", new PackageService());
         router.addService("/transactions", new TransactionService());
+        router.addService("/stats", new StatsService());
         return router;
     }
 }

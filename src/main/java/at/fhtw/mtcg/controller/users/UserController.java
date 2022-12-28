@@ -155,6 +155,10 @@ public class UserController extends Controller {
             }
             //HERE: check authorization
             new SessionRepository(unitOfWork).validateToken(token);
+            String usernameFromToken = new SessionRepository(unitOfWork).getUsernameFromToken(token);
+            if(!username.equals(usernameFromToken)) {
+                throw new InvalidTokenException("Token belongs to wrong user");
+            }
             UserData userData = this.getObjectMapper().readValue(request.getBody(), UserData.class);
             new UserRepository(unitOfWork).updateUserInfo(username, userData);
             unitOfWork.commitTransaction();
