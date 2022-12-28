@@ -11,6 +11,8 @@ import at.fhtw.mtcg.model.UserStats;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepository {
 
@@ -128,6 +130,27 @@ public class UserRepository {
             }
         } catch (UserNotFoundException e) {
             throw new UserNotFoundException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public List<UserStats> getScoreboard() throws Exception {
+        List<UserStats> scoreboard = new ArrayList<>();
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        SELECT * FROM users
+                        ORDER BY elo DESC;
+                    """))
+        {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                scoreboard.add(new UserStats(resultSet.getString("Name"), resultSet.getInt("Elo"),
+                        resultSet.getInt("wins"), resultSet.getInt("losses")));
+            }
+            return scoreboard;
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
