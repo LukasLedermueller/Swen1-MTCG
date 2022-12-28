@@ -2,6 +2,7 @@ package at.fhtw.mtcg.dal.repository.cards;
 
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
+import at.fhtw.mtcg.exception.DuplicateCardException;
 import at.fhtw.mtcg.exception.NoCardsException;
 import at.fhtw.mtcg.exception.NotAvailableException;
 import at.fhtw.mtcg.model.Card;
@@ -29,7 +30,7 @@ public class CardRepository {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                cards.add(new Card(resultSet.getString("id"), CardName.valueOf(resultSet.getString("name")), resultSet.getFloat("damage")));
+                cards.add(new Card(resultSet.getString("id"), resultSet.getString("name"), resultSet.getFloat("damage")));
             }
             return cards;
         } catch (IllegalArgumentException e) {
@@ -53,7 +54,7 @@ public class CardRepository {
             if (!resultSet.next()) {
                 throw new NoCardsException("Card doesn't exist");
             }
-            Card card = new Card(resultSet.getString("id"), CardName.valueOf(resultSet.getString("name")), resultSet.getFloat("damage"));
+            Card card = new Card(resultSet.getString("id"), resultSet.getString("name"), resultSet.getFloat("damage"));
             return card;
         } catch (NoCardsException e) {
             throw new NoCardsException(e.getMessage());
@@ -80,6 +81,45 @@ public class CardRepository {
             }
         } catch (NotAvailableException e) {
             throw new NotAvailableException(e.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public void createNewCard(Card card) throws Exception {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        INSERT INTO cards
+                        VALUES (?,?,?);
+                    """)) {
+            preparedStatement.setString(1,card.getId());
+            preparedStatement.setString(2,card.getName());
+            preparedStatement.setFloat(3,card.getDamage());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            if(e.getSQLState().equals("23505")) {
+                throw new DuplicateCardException("CardId already exists");
+            }
+            throw new SQLException(e.getMessage());
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public void changeOwnerById(String username, String id) throws Exception {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        UPDATE cards
+                        SET owner = ?
+                        WHERE id = ?;
+                    """)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, id);
+            if(preparedStatement.executeUpdate() != 1) {
+                throw new SQLException("Update failed");
+            }
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
         } catch (DataAccessException e) {

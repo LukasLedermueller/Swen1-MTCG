@@ -1,6 +1,7 @@
 package at.fhtw.mtcg.dal.repository.users;
 
 import at.fhtw.mtcg.dal.UnitOfWork;
+import at.fhtw.mtcg.exception.NoMoneyException;
 import at.fhtw.mtcg.exception.UserAlreadyExistsException;
 import at.fhtw.mtcg.exception.UserNotFoundException;
 import at.fhtw.mtcg.model.UserCredentials;
@@ -80,6 +81,30 @@ public class UserRepository {
 
         } catch (UserNotFoundException e) {
             throw new UserNotFoundException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public void subtractCoins(String username, int amount) throws Exception {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                                 UPDATE users
+                                 SET coins = coins -?
+                                 WHERE username = ?
+                             """)) {
+            preparedStatement.setInt(1, amount);
+            preparedStatement.setString(2, username);
+            if (preparedStatement.executeUpdate() != 1) {
+                throw new UserNotFoundException("User not found");
+            }
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException(e.getMessage());
+        } catch (SQLException e) {
+            if(e.getSQLState().equals("23514")) {
+                throw new NoMoneyException("User has not enough money");
+            }
+            throw new SQLException(e.getMessage());
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
