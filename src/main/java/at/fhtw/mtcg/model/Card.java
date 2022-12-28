@@ -12,9 +12,9 @@ public class Card {
 
     public Card() {}
 
-    public Card(String id, CardName name, float damage) {
+    public Card(String id, String name, float damage) {
         this.id = id;
-        this.name = name;
+        this.name = CardName.valueOf(name);
         this.damage = damage;
     }
 

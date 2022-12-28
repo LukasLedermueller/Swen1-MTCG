@@ -123,7 +123,7 @@ public class DeckController extends Controller {
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,
-                    "Ok"
+                    ""
             );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());
