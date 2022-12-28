@@ -1,6 +1,5 @@
 package at.fhtw.mtcg.dal.repository.users;
 
-import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.exception.UserAlreadyExistsException;
 import at.fhtw.mtcg.exception.UserNotFoundException;
@@ -37,7 +36,7 @@ public class UserRepository {
         }
     }
 
-    public UserData getUser(String username) throws Exception {
+    public UserData getUserInfo(String username) throws Exception {
 
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""                  
@@ -62,7 +61,7 @@ public class UserRepository {
         }
     }
 
-    public void updateUser(String username, UserData userData) throws Exception {
+    public void updateUserInfo(String username, UserData userData) throws Exception {
 
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""                  

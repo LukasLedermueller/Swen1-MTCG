@@ -54,23 +54,15 @@ public class SessionRepository {
         }
     }
 
-    public void validateToken(String username, String token) throws Exception {
-        //Curl script adds "Basic " to token
-        if(token.startsWith("Basic")) {
-            token = token.split(" ")[1];
-            if(token == null) {
-                throw new InvalidTokenException("Empty token");
-            }
-        }
+    public void validateToken(/*String username, */String token) throws Exception {
+        token = checkStartsWithBasic(token);
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""                  
                         SELECT * from tokens
-                        WHERE username = ? AND
-                        token = ?;
+                        WHERE token = ?;
                     """))
         {
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, token);
+            preparedStatement.setString(1, token);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(!resultSet.next()) {
                 throw new InvalidTokenException("Invalid token");
@@ -82,5 +74,39 @@ public class SessionRepository {
         } catch (DataAccessException e) {
             throw new DataAccessException(e.getMessage());
         }
+    }
+
+    public String getUsernameFromToken(String token) throws Exception {
+        token = checkStartsWithBasic(token);
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        SELECT username from tokens
+                        WHERE token = ?;
+                    """))
+        {
+            preparedStatement.setString(1, token);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(!resultSet.next()) {
+                throw new InvalidTokenException("Invalid token");
+            }
+            String username = resultSet.getString("username");
+            return username;
+        } catch (InvalidTokenException e) {
+            throw new InvalidTokenException(e.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    private String checkStartsWithBasic(String token) throws InvalidTokenException {
+        if (token.startsWith("Basic")) {
+            token = token.split(" ")[1];
+            if (token == null) {
+                throw new InvalidTokenException("Empty token");
+            }
+        }
+        return token;
     }
 }

@@ -9,7 +9,6 @@ import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.dal.repository.users.SessionRepository;
 import at.fhtw.mtcg.dal.repository.users.UserRepository;
-import at.fhtw.mtcg.exception.InvalidCredentialsException;
 import at.fhtw.mtcg.exception.InvalidTokenException;
 import at.fhtw.mtcg.exception.UserAlreadyExistsException;
 import at.fhtw.mtcg.exception.UserNotFoundException;
@@ -90,8 +89,8 @@ public class UserController extends Controller {
                 throw new InvalidTokenException("Token is empty");
             }
             //HERE: check authorization
-            new SessionRepository(unitOfWork).validateToken(username, token);
-            UserData userData = new UserRepository(unitOfWork).getUser(username);
+            new SessionRepository(unitOfWork).validateToken(token);
+            UserData userData = new UserRepository(unitOfWork).getUserInfo(username);
             String userDataJSON = this.getObjectMapper().writeValueAsString(userData);
             unitOfWork.commitTransaction();
             return new Response(
@@ -148,9 +147,9 @@ public class UserController extends Controller {
                 throw new InvalidTokenException("Token is empty");
             }
             //HERE: check authorization
-            new SessionRepository(unitOfWork).validateToken(username, token);
+            new SessionRepository(unitOfWork).validateToken(token);
             UserData userData = this.getObjectMapper().readValue(request.getBody(), UserData.class);
-            new UserRepository(unitOfWork).updateUser(username, userData);
+            new UserRepository(unitOfWork).updateUserInfo(username, userData);
             unitOfWork.commitTransaction();
                 return new Response(
                         HttpStatus.OK,
