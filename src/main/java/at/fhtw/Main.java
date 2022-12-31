@@ -8,6 +8,7 @@ import at.fhtw.mtcg.service.game.ScoreService;
 import at.fhtw.mtcg.service.game.StatsService;
 import at.fhtw.mtcg.service.packages.PackageService;
 import at.fhtw.mtcg.service.packages.TransactionService;
+import at.fhtw.mtcg.service.trading.TradingService;
 import at.fhtw.mtcg.service.users.SessionService;
 import at.fhtw.mtcg.service.users.UserService;
 import at.fhtw.sampleapp.service.echo.EchoService;
@@ -38,6 +39,7 @@ public class Main {
         router.addService("/transactions", new TransactionService());
         router.addService("/stats", new StatsService());
         router.addService("/score", new ScoreService());
+        router.addService("/tradings", new TradingService());
         return router;
     }
 }

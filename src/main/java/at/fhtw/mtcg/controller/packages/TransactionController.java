@@ -8,21 +8,17 @@ import at.fhtw.mtcg.controller.Controller;
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.dal.repository.cards.CardRepository;
-import at.fhtw.mtcg.dal.repository.packages.PackageRepository;
 import at.fhtw.mtcg.dal.repository.packages.TransactionRepository;
 import at.fhtw.mtcg.dal.repository.users.SessionRepository;
 import at.fhtw.mtcg.dal.repository.users.UserRepository;
 import at.fhtw.mtcg.exception.*;
-import at.fhtw.mtcg.model.Card;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
 public class TransactionController extends Controller {
     public TransactionController(){}
 
-    public Response aquirePackage(Request request) {
+    public Response performTransaction(Request request) {
         UnitOfWork unitOfWork;
         try {
             unitOfWork = new UnitOfWork();

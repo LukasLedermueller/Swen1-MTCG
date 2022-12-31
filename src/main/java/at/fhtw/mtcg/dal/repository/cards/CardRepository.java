@@ -3,6 +3,7 @@ package at.fhtw.mtcg.dal.repository.cards;
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.exception.DuplicateCardException;
+import at.fhtw.mtcg.exception.IsOwnedException;
 import at.fhtw.mtcg.exception.NoCardsException;
 import at.fhtw.mtcg.exception.NotAvailableException;
 import at.fhtw.mtcg.model.Card;
@@ -88,6 +89,26 @@ public class CardRepository {
         }
     }
 
+    public void checkCardNotOwned(String username, String id) throws Exception {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        SELECT * from cards
+                        WHERE owner = ? AND id = ?;
+                    """)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                throw new IsOwnedException("Card is owned by user");
+            }
+        } catch (IsOwnedException e) {
+            throw new NotAvailableException(e.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
     public void createNewCard(Card card) throws Exception {
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""                  

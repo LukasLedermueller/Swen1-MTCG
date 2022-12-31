@@ -6,7 +6,6 @@ import at.fhtw.httpserver.http.Method;
 import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.server.Service;
-import at.fhtw.mtcg.controller.packages.PackageController;
 import at.fhtw.mtcg.controller.packages.TransactionController;
 
 public class TransactionService implements Service {
@@ -19,7 +18,7 @@ public class TransactionService implements Service {
     public Response handleRequest(Request request) {
 
         if (request.getMethod() == Method.POST && request.getPathParts().size() == 2 && request.getPathParts().get(1).equals("packages")) {
-            return this.transactionController.aquirePackage(request);
+            return this.transactionController.performTransaction(request);
         } else {
             return new Response(
                     HttpStatus.BAD_REQUEST,
