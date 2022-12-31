@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PackageController extends Controller {
@@ -48,8 +49,7 @@ public class PackageController extends Controller {
             if (!username.equals("admin")) {
                 throw new UserNotAdminException("User is not admin");
             }
-            List<Card> newPackage = new ObjectMapper().readValue(request.getBody(), new TypeReference<List<Card>>() {
-            });
+            List<Card> newPackage = Arrays.asList(this.getObjectMapper().readValue(request.getBody(), Card[].class));
             for(Card card: newPackage) {
                 new CardRepository(unitOfWork).createNewCard(card);
             }
