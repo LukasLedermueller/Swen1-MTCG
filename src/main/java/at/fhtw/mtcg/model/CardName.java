@@ -16,5 +16,6 @@ public enum CardName {
     Knight,
     Dragon,
     Ork,
-    Kraken
+    Kraken,
+    Wizzard
 }

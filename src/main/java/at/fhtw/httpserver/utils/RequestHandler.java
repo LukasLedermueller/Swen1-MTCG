@@ -35,8 +35,8 @@ public class RequestHandler implements Runnable {
             if (request.getPathname() == null) {
                 response = new Response(
                     HttpStatus.BAD_REQUEST,
-                    ContentType.JSON,
-                    "[]"
+                    ContentType.PLAIN_TEXT,
+                    ""
                 );
             } else {
                 response = this.router.resolve(request.getServiceRoute()).handleRequest(request);

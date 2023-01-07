@@ -155,5 +155,29 @@ public class UserRepository {
             throw new Exception(e.getMessage());
         }
     }
+
+    public void updateUserStats(String username, UserStats userStats) throws Exception {
+
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                                 UPDATE users
+                                 SET elo = ?, wins = ?, losses = ?
+                                 WHERE username = ?;
+                             """)) {
+            preparedStatement.setInt(1, userStats.getElo());
+            preparedStatement.setInt(2, userStats.getWins());
+            preparedStatement.setInt(3, userStats.getLosses());
+            preparedStatement.setString(4, username);
+
+            if (preparedStatement.executeUpdate() != 1) {
+                throw new UserNotFoundException("User not found");
+            }
+
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 }
 

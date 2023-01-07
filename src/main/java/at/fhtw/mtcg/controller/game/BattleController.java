@@ -1,4 +1,4 @@
-package at.fhtw.mtcg.controller.packages;
+package at.fhtw.mtcg.controller.game;
 
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
@@ -7,24 +7,20 @@ import at.fhtw.httpserver.server.Response;
 import at.fhtw.mtcg.controller.Controller;
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
-import at.fhtw.mtcg.dal.repository.cards.CardRepository;
-import at.fhtw.mtcg.dal.repository.packages.PackageRepository;
 import at.fhtw.mtcg.dal.repository.users.SessionRepository;
-import at.fhtw.mtcg.exception.*;
-import at.fhtw.mtcg.model.Card;
-import at.fhtw.mtcg.model.UserCredentials;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import at.fhtw.mtcg.dal.repository.users.UserRepository;
+import at.fhtw.mtcg.exception.InvalidTokenException;
+import at.fhtw.mtcg.exception.NoPlayerFoundException;
+import at.fhtw.mtcg.model.UserStats;
+import at.fhtw.mtcg.service.game.BattleHandler;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class PackageController extends Controller {
-    public PackageController(){}
+public class BattleController extends Controller {
+    public BattleController(){}
 
-    public Response createCardPackage(Request request) {
+    public Response startBattle(Request request) {
+
         UnitOfWork unitOfWork;
         try {
             unitOfWork = new UnitOfWork();
@@ -36,29 +32,20 @@ public class PackageController extends Controller {
                     ""
             );
         }
-        try(unitOfWork) {
-            if (request.getBody() == null) {
-                throw new EmptyRequestBodyException("Request-Body is null");
-            }
-            String token = request.getHeaderMap().getHeader("Authorization");
-            if (token == null) {
+        try (unitOfWork) {
+            String token = request.getHeaderMap().getHeader("Authorization");;
+            if(token == null) {
                 throw new InvalidTokenException("Token is empty");
             }
             new SessionRepository(unitOfWork).validateToken(token);
             String username = new SessionRepository(unitOfWork).getUsernameFromToken(token);
-            if (!username.equals("admin")) {
-                throw new UserNotAdminException("User is not admin");
-            }
-            List<Card> newPackage = Arrays.asList(this.getObjectMapper().readValue(request.getBody(), Card[].class));
-            for(Card card: newPackage) {
-                new CardRepository(unitOfWork).createNewCard(card);
-            }
-            new PackageRepository(unitOfWork).createCardPackage(newPackage);
+
+            String log = BattleHandler.INSTANCE.startBattle(unitOfWork, username, 10000);
             unitOfWork.commitTransaction();
             return new Response(
-                    HttpStatus.CREATED,
+                    HttpStatus.OK,
                     ContentType.PLAIN_TEXT,
-                    "OK"
+                    log
             );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());
@@ -68,21 +55,13 @@ public class PackageController extends Controller {
                     ContentType.PLAIN_TEXT,
                     "Authentication information is missing or invalid"
             );
-        } catch (UserNotAdminException e) {
+        } catch (NoPlayerFoundException e) {
             System.out.println(e.getMessage());
             unitOfWork.rollbackTransaction();
             return new Response(
-                    HttpStatus.FORBIDDEN,
+                    HttpStatus.NOT_FOUND,
                     ContentType.PLAIN_TEXT,
-                    "Provided user is not admin"
-            );
-        } catch (DuplicateCardException e) {
-            System.out.println(e.getMessage());
-            unitOfWork.rollbackTransaction();
-            return new Response(
-                    HttpStatus.CONFLICT,
-                    ContentType.PLAIN_TEXT,
-                    "At least one card already exists"
+                    "No player found"
             );
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -63,7 +63,6 @@ public class UnitOfWork implements AutoCloseable {
 
     @Override
     public void close() {
-        System.out.println("CLOSE");
         this.finishWork();
     }
 }
