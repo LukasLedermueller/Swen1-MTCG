@@ -35,7 +35,6 @@ public class DeckController extends Controller {
         }
         try(unitOfWork) {
             String token = request.getHeaderMap().getHeader("Authorization");
-            ;
             if (token == null) {
                 throw new InvalidTokenException("Token is empty");
             }
@@ -123,7 +122,7 @@ public class DeckController extends Controller {
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,
-                    ""
+                    "OK"
             );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());

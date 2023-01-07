@@ -34,7 +34,6 @@ public class DeckRepository {
             for(int i = 2; i <= 5; i++) {
                 if (resultSet.getString(i) != null) {
                     deck.add(resultSet.getString(i));
-                    System.out.println(resultSet.getString(i));
                 }
             }
             return deck;

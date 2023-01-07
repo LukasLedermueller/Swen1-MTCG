@@ -52,4 +52,14 @@ public class UserStats {
     public void setLosses(int losses) {
         this.losses = losses;
     }
+
+    public void addWin() {
+        this.wins++;
+        this.elo += 3;
+    }
+
+    public void addLoss() {
+        this.losses++;
+        this.elo -= 5;
+    }
 }

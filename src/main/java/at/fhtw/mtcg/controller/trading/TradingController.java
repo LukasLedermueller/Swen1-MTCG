@@ -111,7 +111,7 @@ public class TradingController extends Controller {
             return new Response(
                     HttpStatus.CREATED,
                     ContentType.PLAIN_TEXT,
-                    ""
+                    "OK"
             );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());
@@ -187,7 +187,7 @@ public class TradingController extends Controller {
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,
-                    ""
+                    "OK"
             );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());
@@ -267,8 +267,8 @@ public class TradingController extends Controller {
             unitOfWork.commitTransaction();
             return new Response(
                     HttpStatus.OK,
-                    ContentType.JSON,
-                    ""
+                    ContentType.PLAIN_TEXT,
+                    "OK"
             );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());

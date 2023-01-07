@@ -46,7 +46,7 @@ public class TransactionController extends Controller {
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,
-                    ""
+                    "OK"
             );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());

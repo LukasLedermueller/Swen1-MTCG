@@ -48,7 +48,7 @@ public class UserController extends Controller {
             return new Response(
                     HttpStatus.CREATED,
                     ContentType.PLAIN_TEXT,
-                    ""
+                    "OK"
             );
         } catch (UserAlreadyExistsException e) {
             System.out.println(e.getMessage());
@@ -165,7 +165,7 @@ public class UserController extends Controller {
                 return new Response(
                         HttpStatus.OK,
                         ContentType.PLAIN_TEXT,
-                        ""
+                        "OK"
                 );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());
