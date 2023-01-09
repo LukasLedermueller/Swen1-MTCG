@@ -2,9 +2,7 @@ package at.fhtw.mtcg.dal.repository.users;
 
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
-import at.fhtw.mtcg.exception.InvalidCredentialsException;
-import at.fhtw.mtcg.exception.InvalidTokenException;
-import at.fhtw.mtcg.exception.UserAlreadyExistsException;
+import at.fhtw.mtcg.exception.*;
 import at.fhtw.mtcg.model.UserCredentials;
 
 import java.sql.PreparedStatement;
@@ -68,6 +66,28 @@ public class SessionRepository {
                 throw new InvalidTokenException("Invalid token");
             }
         } catch (InvalidTokenException e) {
+            throw new InvalidTokenException(e.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        } catch (DataAccessException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public void deleteToken(String username) throws Exception {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        DELETE from tokens
+                        WHERE username = ?
+                        RETURNING *;
+                    """))
+        {
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(!resultSet.next()) {
+                throw new UserNotFoundException("No user found");
+            }
+        } catch (UserNotFoundException e) {
             throw new InvalidTokenException(e.getMessage());
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());

@@ -42,6 +42,7 @@ public class BattleController extends Controller {
 
             String log = BattleHandler.INSTANCE.startBattle(unitOfWork, username, 10000);
             unitOfWork.commitTransaction();
+            System.out.println(username + "played a battle");
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,

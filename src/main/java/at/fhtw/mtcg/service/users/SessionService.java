@@ -24,6 +24,8 @@ public class SessionService implements Service {
 
         if (request.getMethod() == Method.POST && request.getPathParts().size() == 1) {
             return this.sessionController.login(request);
+        } else if (request.getMethod() == Method.DELETE && request.getPathParts().size() == 1) {
+            return this.sessionController.logout(request);
         } else {
             return new Response(
                     HttpStatus.BAD_REQUEST,

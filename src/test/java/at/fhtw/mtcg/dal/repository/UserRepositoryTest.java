@@ -11,19 +11,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserRepositoryTest {
 
     @Test
-    void addUser() {
+    void testUserRepositoryAddUser() {
         String username = "test";
         UnitOfWork unitOfWork = new UnitOfWork();
         try{
             new UserRepository(unitOfWork).addUser(new UserCredentials(username, "test"));
         } catch (UserAlreadyExistsException e) {
-            System.out.println("ok");
         } catch (Exception e) {
+            assertTrue(false);
             throw new RuntimeException(e);
         } finally {
             Throwable exception = assertThrows(UserAlreadyExistsException.class, () -> new UserRepository(unitOfWork).addUser(new UserCredentials(username, "test")));
             assertEquals("User already exists", exception.getMessage());
-            unitOfWork.finishWork();
+            unitOfWork.rollbackTransaction();
         }
     }
 }

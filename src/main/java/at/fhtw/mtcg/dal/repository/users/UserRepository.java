@@ -33,7 +33,7 @@ public class UserRepository {
             preparedStatement.setString(2, userCredentials.getPassword());
             preparedStatement.execute();
         } catch (SQLException e) {
-            if(e.getSQLState().equals("23505")) {
+            if(e.getSQLState().equals("23505") || e.getSQLState().equals("25P02")) {
                 throw new UserAlreadyExistsException("User already exists");
             }
             throw new SQLException(e.getMessage());

@@ -43,6 +43,7 @@ public class TransactionController extends Controller {
                 new CardRepository(unitOfWork).changeOwnerById(username, cardId);
             }
             unitOfWork.commitTransaction();
+            System.out.println(username + "performed a transaction");
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,

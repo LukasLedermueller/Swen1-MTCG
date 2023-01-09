@@ -39,12 +39,12 @@ public class CardController extends Controller {
             new SessionRepository(unitOfWork).validateToken(token);
             String username = new SessionRepository(unitOfWork).getUsernameFromToken(token);
             List<Card> cards = new CardRepository(unitOfWork).getCardsOfUser(username);
-            System.out.println(cards.size());
             if(cards.size() == 0) {
                 throw new NoCardsException("User has no cards");
             }
             String cardsJson = this.getObjectMapper().writeValueAsString(cards);
             unitOfWork.commitTransaction();
+            System.out.println("got cards of " + username);
             return new Response(
                     HttpStatus.OK,
                     ContentType.JSON,

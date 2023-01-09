@@ -39,6 +39,7 @@ public class StatsController extends Controller {
             UserStats userStats = new UserRepository(unitOfWork).getUserStats(username);
             String userStatsJSON = this.getObjectMapper().writeValueAsString(userStats);
             unitOfWork.commitTransaction();
+            System.out.println("got stats of " + username);
             return new Response(
                     HttpStatus.OK,
                     ContentType.JSON,
