@@ -53,6 +53,7 @@ public class DeckController extends Controller {
             }
             String deckJson = this.getObjectMapper().writeValueAsString(deckCards);
             unitOfWork.commitTransaction();
+            System.out.println("got deck of " + username);
             return new Response(
                     HttpStatus.OK,
                     ContentType.JSON,
@@ -119,6 +120,7 @@ public class DeckController extends Controller {
             }
             new DeckRepository(unitOfWork).updateDeckOfUser(username, deck);
             unitOfWork.commitTransaction();
+            System.out.println("updated deck of " + username);
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,

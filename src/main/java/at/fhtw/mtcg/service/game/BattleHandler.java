@@ -10,7 +10,6 @@ import at.fhtw.mtcg.exception.UserAlreadyExistsException;
 import at.fhtw.mtcg.model.Card;
 import at.fhtw.mtcg.model.UserStats;
 
-import javax.lang.model.util.ElementFilter;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -49,14 +48,12 @@ public enum BattleHandler {
                 logs.remove(player);
                 throw new NoPlayerFoundException("No player found");
             } else {
-                //System.out.println("game took place for " + player);
                 logs.remove(player);
                 queue.remove(player);
                 return log;
             }
         } else {
             String player2 = queue.remove();
-            //System.out.println("game took place for " + player);
             try {
                 log = conductBattle(unitOfWork, player, player2);
                 logs.put(player2, log);
@@ -79,11 +76,9 @@ public enum BattleHandler {
             List<Card> deckPlayer2 = new ArrayList<>();
             for (String id : deckPlayer1Ids) {
                 deckPlayer1.add(new CardRepository(unitOfWork).getCardById(id));
-                //System.out.println("ID: " + id);
             }
             for (String id : deckPlayer2Ids) {
                 deckPlayer2.add(new CardRepository(unitOfWork).getCardById(id));
-                //System.out.println("ID: " + id);
             }
             if(deckPlayer1.size() != 4 || deckPlayer2.size() != 4) {
                 throw new InvalidDeckSizeException("Deck doesn't contain 4 cards");
@@ -113,9 +108,9 @@ public enum BattleHandler {
                 }
                 roundCounter++;
             }
-            if(roundCounter > 100) {
+            if (roundCounter > 100) {
                 log+= "\nGame ends in a draw!";
-            } else if(deckPlayer1.size() > 0) {
+            } else if (deckPlayer1.size() > 0) {
                 log += "\n" + player1 + " wins!";
                 changeStats(unitOfWork, player1, player2);
             } else {
@@ -132,9 +127,9 @@ public enum BattleHandler {
             return 1;
         } else if (cardPlayer1.getName().endsWith("Goblin") && cardPlayer2.getName().endsWith("Dragon")) {
             return 2;
-        } else if(cardPlayer1.getName().endsWith("Wizzard") && cardPlayer2.getName().endsWith("Ork")) {
+        } else if (cardPlayer1.getName().endsWith("Wizzard") && cardPlayer2.getName().endsWith("Ork")) {
             return 1;
-        } else if(cardPlayer2.getName().endsWith("Wizzard") && cardPlayer1.getName().endsWith("Ork")) {
+        } else if (cardPlayer2.getName().endsWith("Wizzard") && cardPlayer1.getName().endsWith("Ork")) {
             return 2;
         } else if (cardPlayer2.getName().endsWith("Knight") && cardPlayer1.getName().equals("WaterSpell")) {
             return 1;

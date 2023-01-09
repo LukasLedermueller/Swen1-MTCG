@@ -15,11 +15,8 @@ import at.fhtw.mtcg.dal.repository.users.SessionRepository;
 import at.fhtw.mtcg.exception.*;
 import at.fhtw.mtcg.model.Card;
 import at.fhtw.mtcg.model.TradingDeal;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class TradingController extends Controller {
     public TradingController(){}
@@ -45,6 +42,7 @@ public class TradingController extends Controller {
             List<TradingDeal> tradings = new TradingRepository(unitOfWork).getTradings();
             String tradesJSON = this.getObjectMapper().writeValueAsString(tradings);
             unitOfWork.commitTransaction();
+            System.out.println("got all available trades");
             return new Response(
                     HttpStatus.OK,
                     ContentType.JSON,
@@ -108,6 +106,7 @@ public class TradingController extends Controller {
             }
             new TradingRepository(unitOfWork).createTradingDeal(newTradingDeal);
             unitOfWork.commitTransaction();
+            System.out.println(username + "created a trading");
             return new Response(
                     HttpStatus.CREATED,
                     ContentType.PLAIN_TEXT,
@@ -182,8 +181,8 @@ public class TradingController extends Controller {
 
             TradingDeal tradingDealToDelete = new TradingRepository(unitOfWork).deleteTrading(tradingDealId);
             new CardRepository(unitOfWork).checkCardOwnership(username, tradingDealToDelete.getCardToTrade());
-
             unitOfWork.commitTransaction();
+            System.out.println(username + "deleted a trading");
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,
@@ -265,6 +264,7 @@ public class TradingController extends Controller {
             }
             new CardRepository(unitOfWork).checkCardNotOwned(username, tradingDeal.getCardToTrade());
             unitOfWork.commitTransaction();
+            System.out.println(username + "performed a trading");
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,

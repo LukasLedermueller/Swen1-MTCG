@@ -43,7 +43,6 @@ public class UserController extends Controller {
             new UserRepository(unitOfWork).addUser(userCredentials);
             new DeckRepository(unitOfWork).createDeck(userCredentials.getUsername());
             unitOfWork.commitTransaction();
-
             System.out.println("new user: " + userCredentials.getUsername());
             return new Response(
                     HttpStatus.CREATED,
@@ -91,15 +90,15 @@ public class UserController extends Controller {
             if(token == null) {
                 throw new InvalidTokenException("Token is empty");
             }
-            //HERE: check authorization
             new SessionRepository(unitOfWork).validateToken(token);
             String usernameFromToken = new SessionRepository(unitOfWork).getUsernameFromToken(token);
-            if(!username.equals(usernameFromToken)) {
+            if(!username.equals(usernameFromToken) && !usernameFromToken.equals("admin")) {
                 throw new InvalidTokenException("Token belongs to wrong user");
             }
             UserData userData = new UserRepository(unitOfWork).getUserInfo(username);
             String userDataJSON = this.getObjectMapper().writeValueAsString(userData);
             unitOfWork.commitTransaction();
+            System.out.println("get userdata of " + username);
             return new Response(
                     HttpStatus.OK,
                     ContentType.JSON,
@@ -153,20 +152,20 @@ public class UserController extends Controller {
             if(token == null) {
                 throw new InvalidTokenException("Token is empty");
             }
-            //HERE: check authorization
             new SessionRepository(unitOfWork).validateToken(token);
             String usernameFromToken = new SessionRepository(unitOfWork).getUsernameFromToken(token);
-            if(!username.equals(usernameFromToken)) {
+            if(!username.equals(usernameFromToken) && !usernameFromToken.equals("admin")) {
                 throw new InvalidTokenException("Token belongs to wrong user");
             }
             UserData userData = this.getObjectMapper().readValue(request.getBody(), UserData.class);
             new UserRepository(unitOfWork).updateUserInfo(username, userData);
             unitOfWork.commitTransaction();
-                return new Response(
-                        HttpStatus.OK,
-                        ContentType.PLAIN_TEXT,
-                        "OK"
-                );
+            System.out.println("update userdata of " + username);
+            return new Response(
+                    HttpStatus.OK,
+                    ContentType.PLAIN_TEXT,
+                    "OK"
+            );
         } catch (InvalidTokenException e) {
             System.out.println(e.getMessage());
             unitOfWork.rollbackTransaction();

@@ -39,6 +39,7 @@ public class ScoreController extends Controller {
             List<UserStats> scoreboard = new UserRepository(unitOfWork).getScoreboard();
             String scoreboardJSON = this.getObjectMapper().writeValueAsString(scoreboard);
             unitOfWork.commitTransaction();
+            System.out.println("got scoreboard");
             return new Response(
                     HttpStatus.OK,
                     ContentType.JSON,
