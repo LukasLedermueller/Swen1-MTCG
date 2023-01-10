@@ -55,7 +55,7 @@ public class PackageController extends Controller {
             }
             new PackageRepository(unitOfWork).createCardPackage(newPackage);
             unitOfWork.commitTransaction();
-            System.out.println(username + "created a new package");
+            System.out.println(username + " created a new package");
             return new Response(
                     HttpStatus.CREATED,
                     ContentType.PLAIN_TEXT,

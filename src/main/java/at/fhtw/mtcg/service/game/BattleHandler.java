@@ -18,11 +18,6 @@ public enum BattleHandler {
     private final ConcurrentLinkedQueue<String> queue;
     private final ConcurrentHashMap<String, String> logs;
 
-    private enum Element {
-        Fire,
-        Normal,
-        Water
-    }
     private final float[][] checkEffectiveness = {
             {1f, 2f, 0.5f},
             {0.5f, 1f, 2f},
@@ -147,12 +142,15 @@ public enum BattleHandler {
         float cardDamage1 = cardPlayer1.getDamage();
         float cardDamage2 = cardPlayer2.getDamage();
         if (cardPlayer1.getName().endsWith("Spell") || cardPlayer1.getName().endsWith("Spell")) {
-            Element elementCard1 = getElement(cardPlayer1.getName());
-            Element elementCard2 = getElement(cardPlayer2.getName());
+            int elementCard1 = getElement(cardPlayer1.getName());
+            int elementCard2 = getElement(cardPlayer2.getName());
+            System.out.println("test");
 
-            float changeEffectiveness = checkEffectiveness[elementCard1.ordinal()][elementCard2.ordinal()];
-            cardDamage1 *= changeEffectiveness;
-            cardDamage2 /= changeEffectiveness;
+            float changeEffectiveness = checkEffectiveness[elementCard1][elementCard2];
+
+            cardDamage1 = cardDamage1 * changeEffectiveness;
+            cardDamage2 = cardDamage2 / changeEffectiveness;
+            System.out.println(cardDamage1 + " " + cardDamage2);
         }
         if (cardDamage1 > cardDamage2) {
             return 1;
@@ -163,13 +161,13 @@ public enum BattleHandler {
         }
     }
 
-    private Element getElement(String cardName) {
+    private int getElement(String cardName) {
         if (cardName.contains("Fire")) {
-            return Element.Fire;
+            return 0;
         } else if (cardName.contains("Water")) {
-            return Element.Water;
+            return 1;
         } else {
-            return Element.Normal;
+            return 2;
         }
     }
     private void changeStats(UnitOfWork unitOfWork, String winner, String loser) throws Exception {
