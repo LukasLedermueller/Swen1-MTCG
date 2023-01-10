@@ -1,12 +1,10 @@
-package at.fhtw.sampleapp.service.echo;
+package at.fhtw.echo.service.echo;
 
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
 import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.server.Service;
-
-import java.sql.ResultSet;
 
 public class EchoService implements Service {
     @Override

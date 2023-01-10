@@ -5,6 +5,10 @@ import at.fhtw.httpserver.server.HeaderMap;
 import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.utils.RequestBuilder;
+import at.fhtw.mtcg.controller.users.SessionController;
+import at.fhtw.mtcg.dal.UnitOfWork;
+import at.fhtw.mtcg.dal.repository.users.SessionRepository;
+import at.fhtw.mtcg.model.UserCredentials;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -23,8 +27,7 @@ class UserServiceTest {
         request.setMethod(Method.POST);
         request.setPathname("/users");
         request.setBody("{\"username\":\"test\",\"password\":\"test\"}");
-        //response = new UserService().handleRequest(request);
-        //assertTrue(response.get().contains("OK"));
+        new UserService().handleRequest(request);
         response = new UserService().handleRequest(request);
         assertTrue(response.get().contains("409 Conflict"));;
     }

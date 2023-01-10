@@ -46,7 +46,6 @@ public class DeckController extends Controller {
             } else if(deck.size() < 4) {
                 throw new InvalidDeckSizeException("Wrong deck size");
             }
-            System.out.println(deck.size());
             List<Card> deckCards = new ArrayList<>();
             for(String id: deck){
                 deckCards.add(new CardRepository(unitOfWork).getCardById(id));

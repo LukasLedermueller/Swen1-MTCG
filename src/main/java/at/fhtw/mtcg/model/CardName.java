@@ -13,7 +13,7 @@ public enum CardName {
     WaterSpell,
     FireSpell,
     RegularSpell,
-    Knight,
+    Knight, 
     Dragon,
     Ork,
     Kraken,
