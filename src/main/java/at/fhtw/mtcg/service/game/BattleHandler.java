@@ -24,12 +24,12 @@ public enum BattleHandler {
             {2f, 0.5f, 1f}
     };
 
-    private BattleHandler() {
+    BattleHandler() {
         this.queue = new ConcurrentLinkedQueue<>();
         this.logs = new ConcurrentHashMap<>();
     }
     public String startBattle(UnitOfWork unitOfWork, String player, long timeout) throws Exception {
-        String log = null;
+        String log;
         if(this.queue.size() == 0) {
             queue.add(player);
             long startTime = System.currentTimeMillis();
@@ -81,8 +81,8 @@ public enum BattleHandler {
             Random rand = new Random();
             Card cardPlayer1;
             Card cardPlayer2;
-            int winner = 0;
             int roundCounter = 1;
+            int winner;
 
             while(deckPlayer1.size() != 0 && deckPlayer2.size() != 0 && roundCounter <= 100) {
                 cardPlayer1 = deckPlayer1.get(rand.nextInt(deckPlayer1.size()));
@@ -104,12 +104,12 @@ public enum BattleHandler {
                 roundCounter++;
             }
             if (roundCounter > 100) {
-                log+= "\nGame ends in a draw!";
+                log+= "\nGame ends in a draw!\n";
             } else if (deckPlayer1.size() > 0) {
-                log += "\n" + player1 + " wins!";
+                log += "\n" + player1 + " wins!\n";
                 changeStats(unitOfWork, player1, player2);
             } else {
-                log += "\n" + player2 + " wins!";
+                log += "\n" + player2 + " wins!\n";
                 changeStats(unitOfWork, player2, player1);
             }
             return log;

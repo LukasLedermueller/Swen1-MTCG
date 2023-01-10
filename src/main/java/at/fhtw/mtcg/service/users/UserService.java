@@ -21,6 +21,8 @@ public class UserService implements Service {
             return this.userController.addUser(request);
         } else if (request.getMethod() == Method.GET && request.getPathParts().size() == 2) {
             return this.userController.getUser(request);
+        } else if (request.getMethod() == Method.GET && request.getPathParts().size() == 1) {
+            return this.userController.getUsers(request);
         } else if (request.getMethod() == Method.PUT && request.getPathParts().size() == 2) {
             return this.userController.updateUser(request);
         } else {

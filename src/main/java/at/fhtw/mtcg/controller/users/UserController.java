@@ -16,6 +16,7 @@ import at.fhtw.mtcg.exception.UserAlreadyExistsException;
 import at.fhtw.mtcg.exception.UserNotFoundException;
 import at.fhtw.mtcg.model.UserCredentials;
 import at.fhtw.mtcg.model.UserData;
+import java.util.List;
 
 public class UserController extends Controller {
 
@@ -86,7 +87,7 @@ public class UserController extends Controller {
             if(username.isEmpty()) {
                 throw new EmptyRequestBodyException("Username is empty");
             }
-            String token = request.getHeaderMap().getHeader("Authorization");;
+            String token = request.getHeaderMap().getHeader("Authorization");
             if(token == null) {
                 throw new InvalidTokenException("Token is empty");
             }
@@ -99,6 +100,64 @@ public class UserController extends Controller {
             String userDataJSON = this.getObjectMapper().writeValueAsString(userData);
             unitOfWork.commitTransaction();
             System.out.println("get userdata of " + username);
+            return new Response(
+                    HttpStatus.OK,
+                    ContentType.JSON,
+                    userDataJSON
+            );
+        } catch (InvalidTokenException e) {
+            System.out.println(e.getMessage());
+            unitOfWork.rollbackTransaction();
+            return new Response(
+                    HttpStatus.UNAUTHORIZED,
+                    ContentType.PLAIN_TEXT,
+                    "Authentication information is missing or invalid"
+            );
+        } catch (UserNotFoundException e) {
+            System.out.println(e.getMessage());
+            unitOfWork.rollbackTransaction();
+            return new Response(
+                    HttpStatus.NOT_FOUND,
+                    ContentType.PLAIN_TEXT,
+                    "User not found"
+            );
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            unitOfWork.rollbackTransaction();
+            return new Response(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ContentType.PLAIN_TEXT,
+                    ""
+            );
+        }
+    }
+
+    public Response getUsers(Request request) {
+        UnitOfWork unitOfWork;
+        try {
+            unitOfWork = new UnitOfWork();
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+            return new Response(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ContentType.PLAIN_TEXT,
+                    ""
+            );
+        }
+        try (unitOfWork) {
+            String token = request.getHeaderMap().getHeader("Authorization");
+            if (token == null) {
+                throw new InvalidTokenException("Token is empty");
+            }
+            new SessionRepository(unitOfWork).validateToken(token);
+            String username = new SessionRepository(unitOfWork).getUsernameFromToken(token);
+            if (!username.equals("admin")) {
+                throw new InvalidTokenException("User is not admin");
+            }
+            List<UserData> userData = new UserRepository(unitOfWork).getUserInfos();
+            String userDataJSON = this.getObjectMapper().writeValueAsString(userData);
+            unitOfWork.commitTransaction();
+            System.out.println("admin gets userdata");
             return new Response(
                     HttpStatus.OK,
                     ContentType.JSON,
@@ -148,7 +207,7 @@ public class UserController extends Controller {
                 throw new EmptyRequestBodyException("Empty requestBody");
             }
             String username = request.getPathParts().get(1);
-            String token = request.getHeaderMap().getHeader("Authorization");;
+            String token = request.getHeaderMap().getHeader("Authorization");
             if(token == null) {
                 throw new InvalidTokenException("Token is empty");
             }

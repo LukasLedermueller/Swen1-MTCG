@@ -7,13 +7,12 @@ import at.fhtw.mtcg.exception.IsOwnedException;
 import at.fhtw.mtcg.exception.NoCardsException;
 import at.fhtw.mtcg.exception.NotAvailableException;
 import at.fhtw.mtcg.model.Card;
-import at.fhtw.mtcg.model.CardName;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CardRepository {
     private UnitOfWork unitOfWork;
@@ -44,7 +43,6 @@ public class CardRepository {
         //CardName cardName = CardName.valueOf("Ork");
     }
     public Card getCardById(String id) throws Exception {
-        List<Card> cards = new ArrayList<>();
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""                  
                         SELECT * from cards
@@ -55,8 +53,7 @@ public class CardRepository {
             if (!resultSet.next()) {
                 throw new NoCardsException("Card doesn't exist");
             }
-            Card card = new Card(resultSet.getString("id"), resultSet.getString("name"), resultSet.getFloat("damage"));
-            return card;
+            return new Card(resultSet.getString("id"), resultSet.getString("name"), resultSet.getFloat("damage"));
         } catch (NoCardsException e) {
             throw new NoCardsException(e.getMessage());
         } catch (IllegalArgumentException e) {
@@ -115,6 +112,9 @@ public class CardRepository {
                         INSERT INTO cards
                         VALUES (?,?,?);
                     """)) {
+            if(card.getId().equals("")) {
+                card.setId(UUID.randomUUID().toString());
+            }
             preparedStatement.setString(1,card.getId());
             preparedStatement.setString(2,card.getName());
             preparedStatement.setFloat(3,card.getDamage());

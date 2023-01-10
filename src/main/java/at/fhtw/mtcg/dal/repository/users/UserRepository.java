@@ -179,5 +179,28 @@ public class UserRepository {
             throw new Exception(e.getMessage());
         }
     }
+
+    public List<UserData> getUserInfos() throws Exception {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""                  
+                        SELECT * FROM users;
+                    """))
+        {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<UserData> userData = new ArrayList<>();
+            while(resultSet.next()){
+                userData.add(new UserData(resultSet.getString("name"), resultSet.getString("bio"),
+                    resultSet.getString("image")));
+            }
+            if(userData.size() == 0) {
+                throw new UserNotFoundException("User not found");
+            }
+            return userData;
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException(e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
 }
 
