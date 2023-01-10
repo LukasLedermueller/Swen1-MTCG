@@ -69,7 +69,7 @@ CREATE TABLE tradings
     primary key (id)
 );
 /*FÜR UNIT TESTS:
-  INSERT INTO users (username, password) VALUES ('admin', 'istrator');
+INSERT INTO users (username, password) VALUES ('admin', 'istrator');
 INSERT INTO tokens (username, token) VALUES ('admin', 'admin-mtcgToken');
 INSERT INTO users (username, password, name, bio, image) VALUES ('test', 'test', 'testName', 'testBio', 'testImage');
 INSERT INTO tokens(username, token) VALUES ('test', 'test-mtcgToken');

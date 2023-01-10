@@ -3,7 +3,6 @@ package at.fhtw.mtcg.controller.users;
 import at.fhtw.httpserver.server.HeaderMap;
 import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
-import at.fhtw.mtcg.controller.game.ScoreController;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,6 +64,30 @@ class UserControllerTest {
         request.setPathname("/users/test");
         response = new UserController().getUser(request);
         System.out.println(response.get());
+        assertTrue(response.get().contains("200 OK") && response.get().contains("testName"));
+    }
+
+    @Test
+    void testUserControllerGetUsers() {
+        Request request = new Request();
+        Response response;
+
+        //empty request = no token
+        response = new UserController().getUsers(request);
+        assertTrue(response.get().contains("401 Unauthorized"));
+
+        //not admin
+        HeaderMap headerMap = new HeaderMap();
+        headerMap.ingest("Authorization: test-mtcgToken");
+        request.setHeaderMap(headerMap);
+        response = new UserController().getUsers(request);
+        assertTrue(response.get().contains("401 Unauthorized"));
+
+        //get users
+        headerMap = new HeaderMap();
+        headerMap.ingest("Authorization: admin-mtcgToken");
+        request.setHeaderMap(headerMap);
+        response = new UserController().getUsers(request);
         assertTrue(response.get().contains("200 OK") && response.get().contains("testName"));
     }
 
