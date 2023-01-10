@@ -9,7 +9,6 @@ import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.dal.repository.cards.CardRepository;
 import at.fhtw.mtcg.dal.repository.cards.DeckRepository;
-import at.fhtw.mtcg.dal.repository.packages.PackageRepository;
 import at.fhtw.mtcg.dal.repository.trading.TradingRepository;
 import at.fhtw.mtcg.dal.repository.users.SessionRepository;
 import at.fhtw.mtcg.exception.*;
@@ -106,7 +105,7 @@ public class TradingController extends Controller {
             }
             new TradingRepository(unitOfWork).createTradingDeal(newTradingDeal);
             unitOfWork.commitTransaction();
-            System.out.println(username + "created a trading");
+            System.out.println(username + " created a trading");
             return new Response(
                     HttpStatus.CREATED,
                     ContentType.PLAIN_TEXT,
@@ -282,7 +281,7 @@ public class TradingController extends Controller {
             System.out.println(e.getMessage());
             unitOfWork.rollbackTransaction();
             return new Response(
-                    HttpStatus.NO_CONTENT,
+                    HttpStatus.NOT_FOUND,
                     ContentType.PLAIN_TEXT,
                     "Deal not found"
             );

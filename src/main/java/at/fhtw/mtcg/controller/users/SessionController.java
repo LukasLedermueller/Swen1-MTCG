@@ -8,6 +8,7 @@ import at.fhtw.mtcg.controller.Controller;
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.dal.repository.users.SessionRepository;
+import at.fhtw.mtcg.exception.EmptyRequestBodyException;
 import at.fhtw.mtcg.exception.InvalidCredentialsException;
 import at.fhtw.mtcg.exception.InvalidTokenException;
 import at.fhtw.mtcg.exception.UserNotFoundException;
@@ -33,7 +34,7 @@ public class SessionController extends Controller {
         }
         try (unitOfWork) {
             if (request.getBody() == null) {
-                throw new NullPointerException("Request-body is null");
+                throw new EmptyRequestBodyException("Request-body is null");
             }
             UserCredentials userCredentials = this.getObjectMapper().readValue(request.getBody(), UserCredentials.class);
             new SessionRepository(unitOfWork).validateUserCredentials(userCredentials);

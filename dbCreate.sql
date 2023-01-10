@@ -68,9 +68,45 @@ CREATE TABLE tradings
     minimumDamage float not null,
     primary key (id)
 );
+/*FÜR UNIT TESTS:
+  INSERT INTO users (username, password) VALUES ('admin', 'istrator');
+INSERT INTO tokens (username, token) VALUES ('admin', 'admin-mtcgToken');
+INSERT INTO users (username, password, name, bio, image) VALUES ('test', 'test', 'testName', 'testBio', 'testImage');
+INSERT INTO tokens(username, token) VALUES ('test', 'test-mtcgToken');
+INSERT INTO users (username, password, coins) VALUES ('emptyUser', 'test', 0);
+INSERT INTO tokens (username, token) VALUES ('emptyUser', 'emptyUser-mtcgToken');
+INSERT INTO tokens (username, token) VALUES ('logoutUser', 'logoutUser-mtcgToken');
+
+INSERT INTO cards (id, name, damage, owner) VALUES ('1', 'Dragon', '10.0', 'test');
+INSERT INTO cards (id, name, damage, owner) VALUES ('2', 'Dragon', '10.0', 'test');
+INSERT INTO cards (id, name, damage, owner) VALUES ('3', 'Dragon', '10.0', 'test');
+INSERT INTO cards (id, name, damage, owner) VALUES ('4', 'Dragon', '10.0', 'test');
+INSERT INTO cards (id, name, damage, owner) VALUES ('5', 'Dragon', '10.0', 'test');
+INSERT INTO cards (id, name, damage, owner) VALUES ('50', 'Dragon', '10.0', 'test');
+INSERT INTO cards (id, name, damage, owner) VALUES ('51', 'Dragon', '10.0', 'test');
+INSERT INTO cards (id, name, damage, owner) VALUES ('52', 'Dragon', '5.0', 'admin');
+INSERT INTO cards (id, name, damage, owner) VALUES ('53', 'Dragon', '20.0', 'admin');
 
 
-/*SELECT * FROM users;
+INSERT INTO cards (id, name, damage) VALUES ('21', 'Dragon', '10.0');
+INSERT INTO cards (id, name, damage) VALUES ('22', 'Dragon', '10.0');
+INSERT INTO cards (id, name, damage) VALUES ('23', 'Dragon', '10.0');
+INSERT INTO cards (id, name, damage) VALUES ('24', 'Dragon', '10.0');
+INSERT INTO cards (id, name, damage) VALUES ('25', 'Dragon', '10.0');
+
+INSERT INTO packages (card1, card2, card3, card4, card5) VALUES ('21','22','23','24','25');
+
+INSERT INTO decks (owner, card1, card2, card3, card4) VALUES ('test', '2','3', '4', '5');
+INSERT INTO decks (owner) VALUES ('emptyUser');
+INSERT INTO decks (owner) VALUES ('admin');
+
+INSERT INTO tradings (id, cardToTrade, type, minimumDamage) VALUES ('2', '50', 'monster', 10);
+INSERT INTO tradings (id, cardToTrade, type, minimumDamage) VALUES ('3', '51', 'monster', 10);
+INSERT INTO tradings (id, cardToTrade, type, minimumDamage) VALUES ('4', 'test', 'monster', 10);
+ */
+
+/*
+SELECT * FROM users;
 SELECT * FROM tokens;
 SELECT * FROM cards;
 SELECT * FROM decks;

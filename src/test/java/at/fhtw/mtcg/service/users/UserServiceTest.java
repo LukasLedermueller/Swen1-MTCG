@@ -45,7 +45,7 @@ class UserServiceTest {
         headerMap.ingest("Authorization: test-mtcgToken");
         request.setHeaderMap(headerMap);
         response = new UserService().handleRequest(request);
-        assertTrue(response.get().contains("OK"));
+        assertTrue(response.get().contains("200 OK"));
     }
     @Test
     void testUserServiceGetUser() throws Exception {

@@ -84,7 +84,7 @@ public class UserController extends Controller {
         try (unitOfWork) {
             String username = request.getPathParts().get(1);
             if(username.isEmpty()) {
-                throw new NullPointerException("Username is empty");
+                throw new EmptyRequestBodyException("Username is empty");
             }
             String token = request.getHeaderMap().getHeader("Authorization");;
             if(token == null) {
@@ -92,10 +92,10 @@ public class UserController extends Controller {
             }
             new SessionRepository(unitOfWork).validateToken(token);
             String usernameFromToken = new SessionRepository(unitOfWork).getUsernameFromToken(token);
+            UserData userData = new UserRepository(unitOfWork).getUserInfo(username);
             if(!username.equals(usernameFromToken) && !usernameFromToken.equals("admin")) {
                 throw new InvalidTokenException("Token belongs to wrong user");
             }
-            UserData userData = new UserRepository(unitOfWork).getUserInfo(username);
             String userDataJSON = this.getObjectMapper().writeValueAsString(userData);
             unitOfWork.commitTransaction();
             System.out.println("get userdata of " + username);
@@ -145,7 +145,7 @@ public class UserController extends Controller {
         }
         try (unitOfWork) {
             if (request.getBody() == null || request.getPathParts().get(1) == null){
-                throw new NullPointerException();
+                throw new EmptyRequestBodyException("Empty requestBody");
             }
             String username = request.getPathParts().get(1);
             String token = request.getHeaderMap().getHeader("Authorization");;

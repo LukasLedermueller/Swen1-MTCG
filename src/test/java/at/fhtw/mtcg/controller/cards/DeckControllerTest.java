@@ -15,7 +15,7 @@ class DeckControllerTest {
         Request request = new Request();
         Response response;
 
-        //empty response = no token
+        //empty request = no token
         response = new DeckController().getDeckOfUser(request);
         assertTrue(response.get().contains("401 Unauthorized"));
 
