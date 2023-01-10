@@ -24,6 +24,7 @@ Das Hauptaugenmerk beim Testen liegt an den Controllern. Es werden alle möglich
 Deshalb existieren für die Controller am meisten Tests, da sie die wichtigste Logik beinhalten. Außerdem kann man so auch gleichzeitig die Repos mittesten. 
 Es hat für mich keinen Sinn gemacht, die Repos einzeln zu testen, da man das gut mit den Controllern kombinieren kann. 
 Das sind dann vermutlich keine "echten" Unit Tests mehr, aber für mich hat es so am meisten Sinn gemacht, da für den User ja die Responses am wichtigsten sind.
+Außerdem habe ich das vorgegeben Curlscript als Vorlage genutzt, um bestimmte andere Edge Cases zu testen und um zu sehen, dass die Effekte berücksichtigt werden.
 
 ### Unique Feature
 Zum einen habe ich hinzugefügt, dass man sich wieder ausloggen kann. Dabei wird der Token aus dem token Table gelöscht.
